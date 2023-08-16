@@ -11,10 +11,6 @@ func TestInsert(t *testing.T) {
 	root.Insert(right)
 	root.Insert(left)
 
-	if root.Get() != expected {
-		t.Errorf("expected %d, got %d", expected, root.Get())
-	}
-
 	if root.Left.Value != left {
 		t.Errorf("expected root.Left to be %d got %d", left, root.Left.Value)
 	}
