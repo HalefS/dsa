@@ -1,17 +1,21 @@
 package btree
 
-type Node struct {
-	Value int
-	Left  *Node
-	Right *Node
+type Number interface {
+	int8 | int | int32 | int64 | float32 | float64
 }
 
-func New(value int) *Node {
-	return &Node{Value: value, Left: new(Node), Right: new(Node)}
+type Node[T Number] struct {
+	Value T
+	Left  *Node[T]
+	Right *Node[T]
 }
 
-func (n *Node) Insert(value int) {
-	if n.Value == 0 {
+func New[T Number](value T) *Node[T] {
+	return &Node[T]{Value: value, Left: new(Node[T]), Right: new(Node[T])}
+}
+
+func (n *Node[T]) Insert(value T) {
+	if n == nil {
 		n.Value = value
 	} else if value >= n.Value {
 		n.InsertRight(value)
@@ -20,11 +24,7 @@ func (n *Node) Insert(value int) {
 	}
 }
 
-func (n *Node) Get() int {
-	return n.Value
-}
-
-func (n *Node) InsertLeft(value int) {
+func (n *Node[T]) InsertLeft(value T) {
 	if value < n.Value {
 		n.Left.Value = value
 	} else {
@@ -32,7 +32,7 @@ func (n *Node) InsertLeft(value int) {
 	}
 }
 
-func (n *Node) InsertRight(value int) {
+func (n *Node[T]) InsertRight(value T) {
 	if value >= n.Value {
 		n.Right.Value = value
 	} else {
@@ -40,7 +40,7 @@ func (n *Node) InsertRight(value int) {
 	}
 }
 
-func (n *Node) Search(value int) bool {
+func (n *Node[T]) Search(value T) bool {
 	current := n
 	for current != nil {
 		if current.Value == value {
