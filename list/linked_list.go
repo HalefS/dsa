@@ -9,54 +9,54 @@ type Node[T any] struct {
 }
 
 type LinkedList[T any] struct {
-	Size int
-	Head *Node[T]
-	Tail *Node[T]
+	size int
+	head *Node[T]
+	tail *Node[T]
 }
 
 func (l *LinkedList[T]) Prepend(value T) {
-	if l.Head == nil {
-		l.Head = &Node[T]{Value: value}
+	if l.head == nil {
+		l.head = &Node[T]{Value: value}
 	} else {
 		newNode := &Node[T]{Value: value}
-		newNode.Next = l.Head
-		l.Head.Prev = newNode
-		l.Head = newNode
+		newNode.Next = l.head
+		l.head.Prev = newNode
+		l.head = newNode
 	}
 
-	l.Size++
+	l.size++
 }
 
 func (l *LinkedList[T]) Append(value T) {
 	newNode := &Node[T]{Value: value}
-	if l.Head == nil {
-		l.Head = newNode
-		l.Tail = l.Head
-		l.Size++
+	if l.head == nil {
+		l.head = newNode
+		l.tail = l.head
+		l.size++
 	} else {
-		l.Tail.Next = newNode
-		newNode.Prev = l.Tail
-		l.Tail = newNode
-		l.Size++
+		l.tail.Next = newNode
+		newNode.Prev = l.tail
+		l.tail = newNode
+		l.size++
 	}
 }
 
 func (l *LinkedList[T]) InsertAt(index int, value T) {
-	if index > l.Size || index < 0 {
+	if index > l.size || index < 0 {
 		return
 	}
 
 	newNode := &Node[T]{Value: value}
 
 	if index == 0 {
-		l.Head.Prev = newNode
-		newNode.Next = l.Head
-		l.Head = newNode
-		l.Size++
+		l.head.Prev = newNode
+		newNode.Next = l.head
+		l.head = newNode
+		l.size++
 		return
 	}
 
-	prev := l.Head
+	prev := l.head
 	for i := 0; i < index; i++ {
 		prev = prev.Next
 	}
@@ -65,49 +65,53 @@ func (l *LinkedList[T]) InsertAt(index int, value T) {
 	newNode.Next = prev.Next
 	prev.Next = newNode
 
-	l.Size++
+	l.size++
 }
 
 func (l *LinkedList[T]) Get(index int) *T {
-	if l.Head == nil || index > l.Size || index < 0 {
+	if l.head == nil || index > l.size || index < 0 {
 		return nil
 	}
 
-	prev := l.Head
-	for i := 0; i < index; i++ {
-		prev = prev.Next
+	current := l.head
+	for i := 0; i < index && current != nil; i++ {
+		current = current.Next
 	}
 
-	return &prev.Value
+	return &current.Value
 }
 
 func (l *LinkedList[T]) Delete(index int) error {
-	if index > l.Size || index < 0 {
+	if index > l.size || index < 0 {
 		return errors.New("invalid index")
 	}
 
 	if index == 0 {
-		l.Head = l.Head.Prev
-		if l.Head != nil {
-			l.Head.Prev = nil
+		l.head = l.head.Prev
+		if l.head != nil {
+			l.head.Prev = nil
 		}
-		l.Size--
+		l.size--
 		return nil
 	}
 
-	if index == l.Size-1 {
-		l.Tail = l.Tail.Prev
-		l.Size--
+	if index == l.size-1 {
+		l.tail = l.tail.Prev
+		l.size--
 		return nil
 	}
 
-	prev := l.Head
+	prev := l.head
 	for i := 0; i < index; i++ {
 		prev = prev.Next
 	}
 
 	prev.Next = prev.Next.Next
 	prev.Next.Prev = prev
-	l.Size--
+	l.size--
 	return nil
+}
+
+func (l *LinkedList[T]) Size() int {
+	return l.size
 }

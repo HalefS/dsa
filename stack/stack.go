@@ -1,36 +1,56 @@
 package stack
 
-// Generic Stack implementation
+type Node[T any] struct {
+	Value T
+	Prev  *Node[T]
+}
+
+// Linked list based implementation of a generic Stack
 type Stack[T any] struct {
-	items []T
+	head *Node[T]
+	size int
 }
 
 func New() *Stack[any] {
 	return &Stack[any]{
-		items: make([]any, 0),
+		head: nil,
+		size: 0,
 	}
 }
 
-func (s *Stack[T]) Put(item T) {
-	s.items = append(s.items, item)
+func (s *Stack[T]) Push(value T) {
+	node := &Node[T]{Value: value}
+	s.size++
+
+	if s.head == nil {
+		s.head = node
+		return
+	}
+
+	node.Prev = s.head
+	s.head = node
 }
 
 func (s *Stack[T]) Pop() *T {
-	if len(s.items) == 0 {
+	if s.head == nil {
 		return nil
 	}
-	item := s.items[len(s.items)-1]
-	s.items = s.items[:len(s.items)-1]
-	return &item
+
+	head := s.head
+	s.head = head.Prev
+	s.size--
+
+	return &head.Value
 }
 
 func (s *Stack[T]) Peek() *T {
-	if len(s.items) == 0 {
+	if s.head == nil {
 		return nil
 	}
-	return &s.items[len(s.items)-1]
+
+	return &s.head.Value
 }
 
 func (s *Stack[T]) Size() int {
-	return len(s.items)
+	return s.size
 }

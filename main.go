@@ -9,9 +9,9 @@ import (
 func main() {
 
 	stack := stack.New()
-	stack.Put(20)
-	stack.Put(200)
-	stack.Put(500)
+	stack.Push(20)
+	stack.Push(200)
+	stack.Push(500)
 
 	fmt.Println(*stack.Pop())
 }

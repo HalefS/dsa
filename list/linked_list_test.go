@@ -10,8 +10,8 @@ func TestAppend(t *testing.T) {
 		l.Append(v)
 	}
 
-	if l.Size != len(values) {
-		t.Errorf("Expected s.Size to be %d, got %d", len(values), l.Size)
+	if l.Size() != len(values) {
+		t.Errorf("Expected s.Size to be %d, got %d", len(values), l.Size())
 	}
 }
 

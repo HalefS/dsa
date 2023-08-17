@@ -5,9 +5,9 @@ import "testing"
 func TestPut(t *testing.T) {
 	s := New()
 
-	s.Put(200)
-	s.Put(300)
-	s.Put(1)
+	s.Push(200)
+	s.Push(300)
+	s.Push(1)
 
 	if s.Size() != 3 {
 		t.Errorf("stack size not %d. got=%d", 3, s.Size())
@@ -23,7 +23,7 @@ func TestPop(t *testing.T) {
 	}
 
 	expected := 500
-	s.Put(expected)
+	s.Push(expected)
 
 	got := s.Pop()
 	if expected != *got {
@@ -44,7 +44,7 @@ func TestPeek(t *testing.T) {
 	s := New()
 
 	expected := 500
-	s.Put(expected)
+	s.Push(expected)
 
 	got := s.Peek()
 
