@@ -74,7 +74,7 @@ func (l *LinkedList[T]) Get(index int) *T {
 	}
 
 	prev := l.Head
-	for i := 0; i <= index; i++ {
+	for i := 0; i < index; i++ {
 		prev = prev.Next
 	}
 
