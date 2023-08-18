@@ -1,5 +1,7 @@
 package list
 
+// slice based implementation of an array list since go does not
+// permit declaring normal arrays on structs
 type ArryaList[T any] struct {
 	cap   int
 	size  int
@@ -11,17 +13,19 @@ func New[T any](cap int) *ArryaList[T] {
 }
 
 func (l *ArryaList[T]) Insert(value T) {
-	if l.size > l.cap {
-		l.array = append(l.array, value)
+	if l.size < l.cap {
+		l.array[l.size] = value
 		l.size++
 		return
 	}
 
 	l.growArray()
+	l.array[l.size] = value
+	l.size++
 }
 
 func (l *ArryaList[T]) InsertAt(index int, value T) {
-	if index > l.size || index < 0 {
+	if index >= l.size || index < 0 {
 		return
 	}
 	l.array = append(append(l.array[:index], value), l.array[index:]...)
@@ -29,11 +33,21 @@ func (l *ArryaList[T]) InsertAt(index int, value T) {
 }
 
 func (l *ArryaList[T]) DeleteAt(index int) {
-
+	if index >= l.size || index < 0 {
+		return
+	}
+	// split the internal array in two using the index provided
+	// to get rid of it
+	l.array = append(l.array[:index], l.array[index+1:]...)
+	l.size--
 }
 
 func (l *ArryaList[T]) Get(index int) *T {
-	return nil
+	if index >= l.size || index < 0 {
+		return nil
+	}
+
+	return &l.array[index]
 }
 
 func (l *ArryaList[T]) Size() int {
