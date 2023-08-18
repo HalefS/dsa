@@ -1,6 +1,9 @@
 package list
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type Node[T any] struct {
 	Value T
@@ -14,100 +17,107 @@ type LinkedList[T any] struct {
 	tail *Node[T]
 }
 
+// Prepend adds a new element to the beginning o the list
 func (l *LinkedList[T]) Prepend(value T) {
-	if l.head == nil {
-		l.head = &Node[T]{Value: value}
-	} else {
-		newNode := &Node[T]{Value: value}
-		newNode.Next = l.head
-		l.head.Prev = newNode
-		l.head = newNode
-	}
-
+	node := &Node[T]{Value: value}
 	l.size++
-}
 
-func (l *LinkedList[T]) Append(value T) {
-	newNode := &Node[T]{Value: value}
 	if l.head == nil {
-		l.head = newNode
-		l.tail = l.head
-		l.size++
-	} else {
-		l.tail.Next = newNode
-		newNode.Prev = l.tail
-		l.tail = newNode
-		l.size++
+		l.head = node
+		l.tail = node
+		return
 	}
+	node.Next = l.head
+	l.head.Prev = node
+	l.head = node
 }
 
+// Append adds a new element to the end of the list
+func (l *LinkedList[T]) Append(value T) {
+	node := &Node[T]{Value: value}
+	l.size++
+
+	if l.tail == nil {
+		l.tail = node
+		l.head = node
+		return
+	}
+
+	l.tail.Next = node
+	node.Prev = l.tail
+	l.tail = node
+}
+
+// InsertAt adds a new element the the specified index on the list
 func (l *LinkedList[T]) InsertAt(index int, value T) {
 	if index > l.size || index < 0 {
 		return
 	}
 
-	newNode := &Node[T]{Value: value}
-
 	if index == 0 {
-		l.head.Prev = newNode
-		newNode.Next = l.head
-		l.head = newNode
-		l.size++
+		l.Prepend(value)
+		return
+	} else if index == l.size {
+		l.Append(value)
 		return
 	}
 
-	prev := l.head
+	node := &Node[T]{Value: value}
+
+	curr := l.head
 	for i := 0; i < index; i++ {
-		prev = prev.Next
+		curr = curr.Next
 	}
 
-	newNode.Prev = prev
-	newNode.Next = prev.Next
-	prev.Next = newNode
+	prev := curr.Prev
+	prev.Next = node
+	node.Next = curr
+	node.Prev = prev
 
 	l.size++
 }
 
+// Get returns the element at index
 func (l *LinkedList[T]) Get(index int) *T {
 	if l.head == nil || index > l.size || index < 0 {
 		return nil
 	}
 
-	current := l.head
-	for i := 0; i < index && current != nil; i++ {
-		current = current.Next
+	curr := l.head
+	for i := 0; i < index && curr != nil; i++ {
+		curr = curr.Next
 	}
 
-	return &current.Value
+	return &curr.Value
 }
 
+// Delete removes the element at index
 func (l *LinkedList[T]) Delete(index int) error {
-	if index > l.size || index < 0 {
-		return errors.New("invalid index")
+	if index >= l.size || index < 0 {
+		return errors.New(fmt.Sprintf("invalid index: usind %d on list of size %d", index, l.size))
 	}
 
 	if index == 0 {
-		l.head = l.head.Prev
-		if l.head != nil {
-			l.head.Prev = nil
-		}
+		l.head = l.head.Next
 		l.size--
 		return nil
-	}
-
-	if index == l.size-1 {
+	} else if index == l.size-1 {
 		l.tail = l.tail.Prev
+		l.tail.Next = nil
 		l.size--
 		return nil
 	}
 
-	prev := l.head
+	curr := l.head
 	for i := 0; i < index; i++ {
-		prev = prev.Next
+		curr = curr.Next
 	}
 
-	prev.Next = prev.Next.Next
-	prev.Next.Prev = prev
+	prev := curr.Prev
+	curr = curr.Next
+	curr.Prev = prev
+	prev.Next = curr
+
 	l.size--
 	return nil
 }

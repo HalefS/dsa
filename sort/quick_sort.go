@@ -32,6 +32,6 @@ func QuickSort[T Number](arr []T, lo, hi int) {
 	}
 
 	pivotIndex := partition[T](arr, lo, hi)
-	QuickSort(arr, lo, pivotIndex-1) // sort left side excluding pivot
-	QuickSort(arr, pivotIndex+1, hi) // sort right side excluding pivot
+	QuickSort(arr, lo, pivotIndex-1) // week sort left side excluding pivot
+	QuickSort(arr, pivotIndex+1, hi) // week sort right side excluding pivot
 }

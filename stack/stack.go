@@ -5,7 +5,7 @@ type Node[T any] struct {
 	Prev  *Node[T]
 }
 
-// Linked list based implementation of a generic Stack
+// LinkedList based implementation of a generic Stack
 type Stack[T any] struct {
 	head *Node[T]
 	size int

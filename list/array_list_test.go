@@ -18,13 +18,14 @@ func TestArrayInsert(t *testing.T) {
 }
 
 func TestInsertAt(t *testing.T) {
-	l := New[int](10)
+	values := []int{1, 2, 3, 4, 5, 6, 7, 8}
+	l := prepareArrayList(t, values)
 
 	want := 10
 	l.InsertAt(5, want)
 
-	if l.Size() != 1 {
-		t.Errorf("expected list size to be %d got %d", 1, l.Size())
+	if l.Size() != len(values)+1 {
+		t.Errorf("expected list size to be %d got %d", len(values)+1, l.Size())
 		return
 	}
 
@@ -32,4 +33,17 @@ func TestInsertAt(t *testing.T) {
 	if want != got {
 		t.Errorf("expected element at index 5 to be %d, got %d", want, got)
 	}
+}
+
+func prepareArrayList(t *testing.T, values []int) *ArryaList[int] {
+	t.Helper()
+	l := New[int](10)
+	for i, v := range values {
+		if i >= l.cap {
+			break
+		}
+		l.Insert(v)
+	}
+
+	return l
 }

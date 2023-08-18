@@ -15,20 +15,24 @@ func New[T any](cap int) *ArryaList[T] {
 func (l *ArryaList[T]) Insert(value T) {
 	if l.size < l.cap {
 		l.array[l.size] = value
-		l.size++
-		return
+	} else {
+		l.growArray()
+		l.array[l.size] = value
+		l.size--
 	}
 
-	l.growArray()
-	l.array[l.size] = value
 	l.size++
 }
 
 func (l *ArryaList[T]) InsertAt(index int, value T) {
-	if index >= l.size || index < 0 {
+	if index > l.size || index < 0 {
 		return
 	}
-	l.array = append(append(l.array[:index], value), l.array[index:]...)
+
+	left := append(l.array[:index], value)
+	right := l.array[index:]
+	l.array = append(left, right...)
+
 	l.size++
 }
 
@@ -58,5 +62,4 @@ func (l *ArryaList[T]) growArray() {
 	newArray := make([]T, l.cap*2)
 	newArray = append(newArray, l.array...)
 	l.array = newArray
-	l.size++
 }
