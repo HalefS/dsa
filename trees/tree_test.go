@@ -159,8 +159,7 @@ func TestInsert(t *testing.T) {
 	}
 
 	newValue := 50
-	Insert[int](tree.Root, newValue)
-
+	tree.Insert(newValue)
 	if !BinarySearch[int](tree.Root, newValue) {
 		t.Errorf("expected %d to be in the tree", newValue)
 		return

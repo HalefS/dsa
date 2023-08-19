@@ -10,29 +10,41 @@ type TreeNode[T Number] struct {
 	Right *TreeNode[T]
 }
 
+func newNode[T Number](value T) *TreeNode[T] {
+	return &TreeNode[T]{Value: value}
+}
+
 type BST[T Number] struct {
 	Root *TreeNode[T]
 }
 
-func Insert[T Number](node *TreeNode[T], value T) {
-	if node == nil {
-		node = &TreeNode[T]{Value: value}
-		return
+func (b *BST[T]) Insert(value T) *TreeNode[T] {
+	root := b.Root
+	if root == nil {
+		root = insert[T](root, value)
 	}
 
-	if node.Value >= value {
-		if node.Left == nil {
-			node.Left = &TreeNode[T]{Value: value}
-		} else {
-			Insert[T](node.Left, value)
-		}
+	if root.Value >= value {
+		root.Left = insert[T](root.Left, value)
 	} else {
-		if node.Right == nil {
-			node.Right = &TreeNode[T]{Value: value}
-		} else {
-			Insert[T](node.Right, value)
-		}
+		root.Right = insert[T](root.Right, value)
 	}
+
+	return root
+}
+
+func insert[T Number](root *TreeNode[T], value T) *TreeNode[T] {
+	if root == nil {
+		return newNode[T](value)
+	}
+
+	if root.Value >= value {
+		root.Left = newNode[T](value)
+	} else {
+		root.Right = newNode[T](value)
+	}
+
+	return root
 }
 
 func preOrderWalk[T Number](node *TreeNode[T], path *[]T) *[]T {
