@@ -1,1 +1,1 @@
-### Common data structures and algorithms implemented in go following ThePrimeAgen course on Frontend Masters
+## Common data structures and algorithms implemented in go following ThePrimeagen course on Frontend Masters
