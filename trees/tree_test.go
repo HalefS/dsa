@@ -1,7 +1,6 @@
 package trees
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -117,6 +116,35 @@ func TestCompare(t *testing.T) {
 
 }
 
+func TestBinarySearch(t *testing.T) {
+	tree := &BST[int]{
+		Root: &TreeNode[int]{
+			Value: 10,
+			Left: &TreeNode[int]{
+				Value: 5,
+			},
+			Right: &TreeNode[int]{
+				Value: 20,
+				Left: &TreeNode[int]{
+					Value: 15,
+				},
+				Right: &TreeNode[int]{
+					Value: 30,
+				},
+			},
+		},
+	}
+
+	if !BinarySearch[int](tree.Root, 15) {
+		t.Errorf("expected 15 to present on the tree")
+		return
+	}
+
+	if BinarySearch[int](tree.Root, 100) {
+		t.Errorf("100 should not be present on the tree")
+	}
+}
+
 func TestInsert(t *testing.T) {
 	tree := &BST[int]{
 		Root: &TreeNode[int]{
@@ -130,11 +158,15 @@ func TestInsert(t *testing.T) {
 		},
 	}
 
-	Insert[int](tree.Root, 50)
-	if !BinarySearch[int](tree.Root, 50) {
-		t.Errorf("expected %d to be in the tree", 50)
+	newValue := 50
+	Insert[int](tree.Root, newValue)
+
+	if !BinarySearch[int](tree.Root, newValue) {
+		t.Errorf("expected %d to be in the tree", newValue)
 		return
 	}
-	arr := PreOrderSeach[int](tree.Root)
-	fmt.Printf("elements: %v", arr)
+
+	if tree.Root.Right.Right.Value != newValue {
+		t.Errorf("newValue was not inserted in right place")
+	}
 }
