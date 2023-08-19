@@ -20,7 +20,7 @@ func Insert[T Number](node *TreeNode[T], value T) {
 		return
 	}
 
-	if value >= node.Value {
+	if node.Value >= value {
 		if node.Left == nil {
 			node.Left = &TreeNode[T]{Value: value}
 		} else {
