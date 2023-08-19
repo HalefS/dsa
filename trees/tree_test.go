@@ -66,3 +66,27 @@ func TestPostOrderSearch(t *testing.T) {
 		}
 	}
 }
+
+func TestBFS(t *testing.T) {
+	root := TreeNode[int]{Value: 50}
+
+	left := TreeNode[int]{Value: 44}
+	left.Left = &TreeNode[int]{Value: 10}
+	left.Right = &TreeNode[int]{Value: 12}
+
+	right := TreeNode[int]{Value: 13}
+	right.Left = &TreeNode[int]{Value: 65}
+	right.Right = &TreeNode[int]{Value: 28}
+
+	root.Left = &left
+	root.Right = &right
+
+	if !Bfs[int](&root, 28) {
+		t.Errorf("expected 28 to be found on the tree")
+		return
+	}
+
+	if Bfs[int](&root, 100) {
+		t.Errorf("did not expect 100 to be present in the tree")
+	}
+}

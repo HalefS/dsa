@@ -1,12 +1,12 @@
 package trees
 
-type TreeNode[T any] struct {
+type TreeNode[T comparable] struct {
 	Value T
 	Left  *TreeNode[T]
 	Right *TreeNode[T]
 }
 
-func preOrderWalk[T any](node *TreeNode[T], path *[]T) *[]T {
+func preOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
 	if node == nil {
 		return path
 	}
@@ -18,7 +18,7 @@ func preOrderWalk[T any](node *TreeNode[T], path *[]T) *[]T {
 	return path
 }
 
-func inOrderWalk[T any](node *TreeNode[T], path *[]T) *[]T {
+func inOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
 	if node == nil {
 		return path
 	}
@@ -30,7 +30,7 @@ func inOrderWalk[T any](node *TreeNode[T], path *[]T) *[]T {
 	return path
 }
 
-func postOrderWalk[T any](node *TreeNode[T], path *[]T) *[]T {
+func postOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
 	if node == nil {
 		return path
 	}
@@ -42,14 +42,36 @@ func postOrderWalk[T any](node *TreeNode[T], path *[]T) *[]T {
 	return path
 }
 
-func PreOrderSeach[T any](root *TreeNode[T]) []T {
+func PreOrderSeach[T comparable](root *TreeNode[T]) []T {
 	return *preOrderWalk(root, &[]T{})
 }
 
-func InOrderSeach[T any](root *TreeNode[T]) []T {
+func InOrderSeach[T comparable](root *TreeNode[T]) []T {
 	return *inOrderWalk(root, &[]T{})
 }
 
-func PostOrderSearch[T any](root *TreeNode[T]) []T {
+func PostOrderSearch[T comparable](root *TreeNode[T]) []T {
 	return *postOrderWalk(root, &[]T{})
+}
+
+func Bfs[T comparable](root *TreeNode[T], value T) bool {
+	q := []*TreeNode[T]{root}
+
+	for len(q) != 0 {
+		curr := q[0]
+		q = q[1:]
+		if curr.Value == value {
+			return true
+		}
+
+		if curr.Left != nil {
+			q = append(q, curr.Left)
+		}
+
+		if curr.Right != nil {
+			q = append(q, curr.Right)
+		}
+	}
+
+	return false
 }
