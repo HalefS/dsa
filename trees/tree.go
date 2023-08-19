@@ -1,12 +1,41 @@
 package trees
 
-type TreeNode[T comparable] struct {
+type Number interface {
+	int | int32 | int8 | int64 | float32 | float64
+}
+
+type TreeNode[T Number] struct {
 	Value T
 	Left  *TreeNode[T]
 	Right *TreeNode[T]
 }
 
-func preOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
+type BST[T Number] struct {
+	Root *TreeNode[T]
+}
+
+func Insert[T Number](node *TreeNode[T], value T) {
+	if node == nil {
+		node = &TreeNode[T]{Value: value}
+		return
+	}
+
+	if value >= node.Value {
+		if node.Left == nil {
+			node.Left = &TreeNode[T]{Value: value}
+		} else {
+			Insert[T](node.Left, value)
+		}
+	} else {
+		if node.Right == nil {
+			node.Right = &TreeNode[T]{Value: value}
+		} else {
+			Insert[T](node.Right, value)
+		}
+	}
+}
+
+func preOrderWalk[T Number](node *TreeNode[T], path *[]T) *[]T {
 	if node == nil {
 		return path
 	}
@@ -18,7 +47,7 @@ func preOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
 	return path
 }
 
-func inOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
+func inOrderWalk[T Number](node *TreeNode[T], path *[]T) *[]T {
 	if node == nil {
 		return path
 	}
@@ -30,7 +59,7 @@ func inOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
 	return path
 }
 
-func postOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
+func postOrderWalk[T Number](node *TreeNode[T], path *[]T) *[]T {
 	if node == nil {
 		return path
 	}
@@ -42,19 +71,35 @@ func postOrderWalk[T comparable](node *TreeNode[T], path *[]T) *[]T {
 	return path
 }
 
-func PreOrderSeach[T comparable](root *TreeNode[T]) []T {
+func PreOrderSeach[T Number](root *TreeNode[T]) []T {
 	return *preOrderWalk(root, &[]T{})
 }
 
-func InOrderSeach[T comparable](root *TreeNode[T]) []T {
+func InOrderSeach[T Number](root *TreeNode[T]) []T {
 	return *inOrderWalk(root, &[]T{})
 }
 
-func PostOrderSearch[T comparable](root *TreeNode[T]) []T {
+func PostOrderSearch[T Number](root *TreeNode[T]) []T {
 	return *postOrderWalk(root, &[]T{})
 }
 
-func Bfs[T comparable](root *TreeNode[T], value T) bool {
+func BinarySearch[T Number](root *TreeNode[T], value T) bool {
+	if root == nil {
+		return false
+	}
+
+	if root.Value == value {
+		return true
+	}
+
+	if value > root.Value {
+		return BinarySearch[T](root.Right, value)
+	} else {
+		return BinarySearch[T](root.Left, value)
+	}
+}
+
+func BFS[T Number](root *TreeNode[T], value T) bool {
 	q := []*TreeNode[T]{root}
 
 	for len(q) != 0 {
@@ -74,4 +119,21 @@ func Bfs[T comparable](root *TreeNode[T], value T) bool {
 	}
 
 	return false
+}
+
+func Compare[T Number](a, b *TreeNode[T]) bool {
+	if a == nil && b == nil {
+		return true
+	}
+
+	// if one is null and the other is not
+	if a == nil || b == nil {
+		return false
+	}
+
+	if a.Value != b.Value {
+		return false
+	}
+
+	return Compare[T](a.Left, b.Left) && Compare[T](a.Right, b.Right)
 }

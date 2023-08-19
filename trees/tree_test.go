@@ -1,6 +1,7 @@
 package trees
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -81,12 +82,59 @@ func TestBFS(t *testing.T) {
 	root.Left = &left
 	root.Right = &right
 
-	if !Bfs[int](&root, 28) {
+	if !BFS[int](&root, 28) {
 		t.Errorf("expected 28 to be found on the tree")
 		return
 	}
 
-	if Bfs[int](&root, 100) {
+	if BFS[int](&root, 100) {
 		t.Errorf("did not expect 100 to be present in the tree")
 	}
+}
+
+func TestCompare(t *testing.T) {
+	a := BST[int]{Root: &TreeNode[int]{
+		Value: 10,
+		Left:  &TreeNode[int]{Value: 20},
+		Right: &TreeNode[int]{Value: 30},
+	}}
+
+	b := BST[int]{Root: &TreeNode[int]{
+		Value: 10,
+		Left:  &TreeNode[int]{Value: 20},
+		Right: &TreeNode[int]{Value: 30},
+	}}
+
+	if !Compare[int](a.Root, b.Root) {
+		t.Error("expected trees to be equsl")
+	}
+
+	b.Root.Left.Value = 100
+
+	if Compare[int](a.Root, b.Root) {
+		t.Errorf("expected trees to be not equal")
+	}
+
+}
+
+func TestInsert(t *testing.T) {
+	tree := &BST[int]{
+		Root: &TreeNode[int]{
+			Value: 10,
+			Right: &TreeNode[int]{
+				Value: 20,
+			},
+			Left: &TreeNode[int]{
+				Value: 5,
+			},
+		},
+	}
+
+	Insert[int](tree.Root, 50)
+	if !BinarySearch[int](tree.Root, 50) {
+		t.Errorf("expected %d to be in the tree", 50)
+		return
+	}
+	arr := PreOrderSeach[int](tree.Root)
+	fmt.Printf("elements: %v", arr)
 }
