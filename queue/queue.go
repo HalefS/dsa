@@ -6,7 +6,10 @@ type Node[T any] struct {
 	Next  *Node[T]
 }
 
-// Linked list based implementation of a Queue
+// Node based implementation of a Queue
+// could be implemented easily with just a slice
+// but wanted to get my hands dirty and really understand
+// how these structures work
 type Queue[T any] struct {
 	length int
 	head   *Node[T]
@@ -47,6 +50,5 @@ func (q *Queue[T]) Peek() *T {
 	if q.length == 0 {
 		return nil
 	}
-
 	return &q.head.Value
 }
