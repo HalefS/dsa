@@ -18,6 +18,13 @@ func NewHeap[T Number](cap int) *MinHeap[T] {
 	}
 }
 
+func (h *MinHeap[T]) Peek() *T {
+	if h.size != 0 {
+		return &h.elements[0]
+	}
+	return nil
+}
+
 func (h *MinHeap[T]) Insert(value T) {
 	h.elements[h.size] = value
 	h.heapifyUp(h.size)

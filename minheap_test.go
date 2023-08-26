@@ -35,3 +35,19 @@ func TestHeapPop(t *testing.T) {
 	}
 
 }
+
+func TestHeapPeek(t *testing.T) {
+	h := NewHeap[int](50)
+
+	h.Insert(200)
+	h.Insert(50)
+	h.Insert(300)
+	h.Insert(10)
+
+	minValue := 5
+	h.Insert(minValue)
+
+	if *h.Peek() != minValue {
+		t.Errorf("expected min value to be %d, got %d", minValue, *h.Peek())
+	}
+}
